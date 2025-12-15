@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface QuestionCardProps {
@@ -13,29 +14,35 @@ export const QuestionCard = ({
   selectedIndex,
   onSelect,
 }: QuestionCardProps) => {
-  const letters = ["A", "B", "C", "D"];
-
   return (
-    <div className="mb-4">
-      <h3 className="text-sm md:text-base font-semibold text-foreground/90 mb-3">
+    <motion.div 
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mb-4"
+    >
+      <h3 className="text-sm md:text-base font-semibold text-foreground mb-3">
         {question}
       </h3>
-      <div className="grid gap-2">
+      <div className="grid grid-cols-1 gap-2">
         {options.map((option, idx) => (
-          <button
+          <motion.button
             key={idx}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
             onClick={() => onSelect(idx)}
             className={cn(
-              "text-left p-3 rounded-lg border transition-all duration-200 text-sm",
+              "w-full text-left p-3 rounded-lg border transition-all duration-200",
+              "text-sm cursor-pointer",
               selectedIndex === idx
-                ? "bg-primary text-primary-foreground font-bold border-primary/70"
-                : "bg-foreground/[0.02] border-foreground/[0.05] text-muted-foreground hover:bg-foreground/[0.05] hover:border-foreground/10"
+                ? "bg-primary text-primary-foreground border-primary font-bold shadow-lg shadow-primary/20"
+                : "bg-foreground/[0.02] border-foreground/5 text-muted-foreground hover:bg-foreground/[0.05] hover:border-foreground/10"
             )}
           >
-            {letters[idx]}) {option}
-          </button>
+            {String.fromCharCode(65 + idx)}) {option}
+          </motion.button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
