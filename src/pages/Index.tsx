@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { QuizForm } from "@/components/QuizForm";
 import { ResultsPanel } from "@/components/ResultsPanel";
 import { ProfileResult } from "@/types/quiz";
@@ -64,15 +65,25 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background flex justify-center p-4 md:p-7">
-      <div className="w-full max-w-[960px] card-gradient rounded-2xl p-5 md:p-6 shadow-2xl relative glow-green">
-        <header className="text-center mb-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-[960px] card-gradient rounded-2xl p-5 md:p-6 shadow-2xl relative glow-green"
+      >
+        <motion.header 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-center mb-4"
+        >
           <h1 className="text-gold text-2xl md:text-3xl font-bold mb-2">
             Perfil Premium — Investidor Preguiçoso
           </h1>
           <p className="text-muted-foreground text-sm md:text-base">
             Responda ao formulário e receba uma análise detalhada — com recomendação 2% / 3% / 5% e sugestão de carteira.
           </p>
-        </header>
+        </motion.header>
 
         <div className="flex flex-col lg:flex-row gap-5 mt-5">
           <QuizForm onCalculate={handleCalculate} onClear={handleClear} />
@@ -82,7 +93,7 @@ const Index = () => {
         <footer className="mt-5 text-center text-muted-foreground text-xs">
           Resultados informativos — consulte um especialista para recomendações financeiras personalizadas.
         </footer>
-      </div>
+      </motion.div>
     </main>
   );
 };

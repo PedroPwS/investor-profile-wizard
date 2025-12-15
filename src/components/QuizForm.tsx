@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { questions } from "@/data/questions";
 import { QuestionCard } from "./QuestionCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Calculator, RotateCcw } from "lucide-react";
 
 interface QuizFormProps {
   onCalculate: (score: number) => void;
@@ -27,16 +29,42 @@ export const QuizForm = ({ onCalculate, onClear }: QuizFormProps) => {
     }
     const score = answers.reduce((sum, val) => sum + (val ?? 0), 0);
     onCalculate(score);
+    toast.success("Perfil calculado com sucesso!");
   };
 
   const handleClear = () => {
     setAnswers(new Array(questions.length).fill(null));
     onClear();
+    toast.info("Respostas limpas.");
   };
 
+  const answeredCount = answers.filter((a) => a !== null).length;
+  const progress = (answeredCount / questions.length) * 100;
+
   return (
-    <div className="flex-1 bg-card p-4 rounded-xl">
-      <div className="space-y-4">
+    <motion.div 
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex-1 bg-card p-4 rounded-xl border border-foreground/5"
+    >
+      {/* Progress bar */}
+      <div className="mb-4">
+        <div className="flex justify-between text-xs text-muted-foreground mb-1">
+          <span>Progresso</span>
+          <span>{answeredCount} / {questions.length}</span>
+        </div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.3 }}
+            className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
         {questions.map((q, idx) => (
           <QuestionCard
             key={idx}
@@ -51,18 +79,20 @@ export const QuizForm = ({ onCalculate, onClear }: QuizFormProps) => {
       <div className="flex gap-3 mt-5">
         <Button
           onClick={handleCalculate}
-          className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 h-auto"
+          className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 h-auto gap-2"
         >
+          <Calculator className="w-4 h-4" />
           Calcular Perfil
         </Button>
         <Button
           onClick={handleClear}
           variant="outline"
-          className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-bold py-3 h-auto border-border"
+          className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-bold py-3 h-auto border-border gap-2"
         >
+          <RotateCcw className="w-4 h-4" />
           Limpar
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };
